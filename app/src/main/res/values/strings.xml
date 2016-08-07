@@ -15,4 +15,6 @@
     <string name="sample_change" translatable="false">100%</string>
     <string name="add_new_stock">Add New Stock</string>
     <string name="appwidget_text">Stock Prices</string>
+    <string name="stock_saved">This stock is already saved!</string>
+    <string name="stock_not_exist">Stock Does Not Exist</string>
 </resources>

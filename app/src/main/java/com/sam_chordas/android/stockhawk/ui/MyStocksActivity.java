@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,25 +106,38 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
                                 @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
+                                public void onInput(MaterialDialog dialog, final CharSequence input) {
                                     // On FAB click, receive user input. Make sure the stock doesn't already exist
                                     // in the DB and proceed accordingly
-                                    Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                                            new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-                                            new String[]{input.toString()}, null);
-                                    if (c.getCount() != 0) {
-                                        Toast toast =
-                                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                                                        Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                                        toast.show();
-                                        return;
-                                    } else {
-                                        // Add the stock to DB
-                                        mServiceIntent.putExtra("tag", "add");
-                                        mServiceIntent.putExtra("symbol", input.toString());
-                                        startService(mServiceIntent);
-                                    }
+
+                                    new Handler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                                                    new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+                                                    new String[]{input.toString()}, null);
+                                            if (c.getCount() != 0) {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Toast toast =
+                                                                Toast.makeText(MyStocksActivity.this, R.string.stock_saved,
+                                                                        Toast.LENGTH_LONG);
+                                                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                                                        toast.show();
+                                                    }
+                                                });
+
+                                                return;
+                                            } else {
+                                                // Add the stock to DB
+                                                mServiceIntent.putExtra("tag", "add");
+                                                mServiceIntent.putExtra("symbol", input.toString());
+                                                startService(mServiceIntent);
+                                            }
+                                        }
+                                    });
+
                                 }
                             })
                             .show();
