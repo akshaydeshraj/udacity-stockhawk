@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.StockGraphActivity;
 
 /**
  * @author akshay
@@ -88,12 +89,16 @@ class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         views.setTextViewText(R.id.bid_price, data.getString(data.getColumnIndex("bid_price")));
         views.setTextViewText(R.id.change, data.getString(data.getColumnIndex("percent_change")));
 
-
         if (data.getInt(data.getColumnIndex("is_up")) == 1) {
             views.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
         } else {
             views.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_red);
         }
+
+        Intent clickIntent = new Intent();
+        clickIntent.putExtra(StockGraphActivity.STOCK_SYMBOL, symbol);
+        clickIntent.putExtra(StockGraphActivity.ACTIVITY_SOURCE, "widget");
+        views.setOnClickFillInIntent(R.id.list_view_row, clickIntent);
 
         return views;
     }

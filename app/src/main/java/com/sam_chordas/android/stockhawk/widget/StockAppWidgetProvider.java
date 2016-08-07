@@ -9,6 +9,7 @@ import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+import com.sam_chordas.android.stockhawk.ui.StockGraphActivity;
 
 /**
  * @author akshay
@@ -24,12 +25,16 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
                 new Intent(context, StockAppRemoteViewsService.class));
 
         //Intent to start MyStocksActivity
-
         Intent stocksActivityIntent = new Intent(context, MyStocksActivity.class);
         PendingIntent stocksActivityPendingIntent = PendingIntent.getActivity(context, 0,
                 stocksActivityIntent, 0);
-
         views.setOnClickPendingIntent(R.id.widget_text, stocksActivityPendingIntent);
+
+        //Intent to start StockGraphActivity
+        Intent stockGraphActivityIntent = new Intent(context, StockGraphActivity.class);
+        PendingIntent stockGraphActivityPendingIntent = PendingIntent.getActivity(context, 0,
+                stockGraphActivityIntent, 0);
+        views.setPendingIntentTemplate(R.id.widget_list, stockGraphActivityPendingIntent);
 
         return views;
     }

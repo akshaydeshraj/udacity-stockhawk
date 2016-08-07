@@ -32,7 +32,9 @@ import java.util.ArrayList;
 
 public class StockGraphActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String STOCK_SYMBOL = "stock_symbol";
+    public static final String STOCK_SYMBOL = "stock_symbol";
+    public static final String ACTIVITY_SOURCE = "activity_source";
+
     private static final int SINGLE_STOCK_LOADER = 100;
 
     private String symbol;
@@ -96,6 +98,18 @@ public class StockGraphActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (getIntent().getExtras().getString(ACTIVITY_SOURCE) == null) {
+            finish();
+        } else {
+            Intent intent = new Intent(this, MyStocksActivity.class);
+            startActivity(intent);
+        }
     }
 
     private ArrayList<Entry> getPriceArrayList(Cursor data) {
