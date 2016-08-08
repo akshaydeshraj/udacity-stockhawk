@@ -6,12 +6,10 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -78,7 +76,6 @@ public class StockGraphActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v("Cursor", DatabaseUtils.dumpCursorToString(data));
 
         LineDataSet stockPriceSet = new LineDataSet(getPriceArrayList(data), symbol);
         stockPriceSet.setDrawValues(false);
